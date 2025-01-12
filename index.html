@@ -112,6 +112,10 @@
                 <label for="pause">Pause Between Loops (seconds):</label>
                 <input type="number" id="pause" value="0" min="0">
             </div>
+            <div class="input-group">
+                <label for="custom-alarm">Get Ready! (seconds remaining):</label>
+                <input type="number" id="get-ready-alarm" value="15" min="0">
+            </div>
             <div class="buttons">
                 <button onclick="startTimer()">Start</button>
                 <button onclick="stopTimer()">Stop</button>
@@ -124,6 +128,7 @@
         let timerElement = document.getElementById('timer');
         let interval = null;
         let pauseTimeout = null;
+        let customAlarmTriggered = false;
 
         function formatTime(hours, minutes, seconds) {
             return `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
@@ -135,8 +140,11 @@
             let minutes = parseInt(document.getElementById('minutes').value) || 0;
             let seconds = parseInt(document.getElementById('seconds').value) || 0;
             let pauseDuration = parseInt(document.getElementById('pause').value) || 0;
+            let customAlarmTime = parseInt(document.getElementById('get-ready-alarm').value) || 0;
 
             let totalTimeInSeconds = hours * 3600 + minutes * 60 + seconds;
+            customAlarmTriggered = false;
+
             if (totalTimeInSeconds <= 0) {
                 alert("Please set a valid timer duration!");
                 return;
@@ -146,6 +154,12 @@
                 interval = setInterval(() => {
                     if (totalTimeInSeconds > 0) {
                         totalTimeInSeconds--;
+
+                        if (!customAlarmTriggered && totalTimeInSeconds === customAlarmTime) {
+                            customBeep();
+                            customAlarmTriggered = true;
+                        }
+
                         let h = Math.floor(totalTimeInSeconds / 3600);
                         let m = Math.floor((totalTimeInSeconds % 3600) / 60);
                         let s = totalTimeInSeconds % 60;
@@ -156,6 +170,7 @@
                         // Add pause before restarting
                         pauseTimeout = setTimeout(() => {
                             totalTimeInSeconds = hours * 3600 + minutes * 60 + seconds;
+                            customAlarmTriggered = false;
                             countdown();
                         }, pauseDuration * 1000);
                     }
@@ -176,11 +191,17 @@
             document.getElementById('minutes').value = 0;
             document.getElementById('seconds').value = 0;
             document.getElementById('pause').value = 0;
+            document.getElementById('custom-alarm').value = 15;
             timerElement.textContent = "00:00:00"; // Reset display
         }
 
         function beep() {
             let audio = new Audio('https://actions.google.com/sounds/v1/alarms/beep_short.ogg');
+            audio.play();
+        }
+
+        function customBeep() {
+            let audio = new Audio('https://actions.google.com/sounds/v1/alarms/digital_watch_alarm_long.ogg');
             audio.play();
         }
     </script>
