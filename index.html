@@ -68,10 +68,6 @@
             text-align: center;
         }
 
-        .input-group input[type="number"]:focus {
-            outline: 2px solid #BB86FC; /* Highlight on focus */
-        }
-
         .buttons {
             display: flex;
             justify-content: center;
@@ -120,10 +116,8 @@
                 <input type="number" id="pause" value="0" min="0">
             </div>
             <div class="input-group">
-                <label for="custom-alarm">Get Ready! (seconds remaining):</label>
-                <input type="number" id="get-ready-alarm" value="15" min="0">
-            </div>
-            <button onclick="resetTimer()">Reset Timer</button>
+                <label for="get-ready-alarm">Get Ready! (seconds remaining):</label>
+                <input type="number" id="get-ready-alarm" value="0" min="0">
             </div>
         </div>
     </div>
@@ -171,7 +165,6 @@
                     } else {
                         clearInterval(interval);
                         beep();
-                        // Add pause before restarting
                         pauseTimeout = setTimeout(() => {
                             totalTimeInSeconds = hours * 3600 + minutes * 60 + seconds;
                             customAlarmTriggered = false;
@@ -189,17 +182,22 @@
             clearTimeout(pauseTimeout);
         }
 
+        function clearTimer() {
+            stopTimer();
+            document.getElementById('hours').value = 0;
+            document.getElementById('minutes').value = 0;
+            document.getElementById('seconds').value = 0;
+            document.getElementById('pause').value = 0;
+            document.getElementById('get-ready-alarm').value = 0;
+            timerElement.textContent = "00:00:00";
+        }
+
         function resetTimer() {
             stopTimer();
             let hours = parseInt(document.getElementById('hours').value) || 0;
             let minutes = parseInt(document.getElementById('minutes').value) || 0;
             let seconds = parseInt(document.getElementById('seconds').value) || 0;
-            let totalTimeInSeconds = hours * 3600 + minutes * 60 + seconds;
             timerElement.textContent = formatTime(hours, minutes, seconds);
-        }
-
-        
-            timerElement.textContent = "00:00:00"; // Reset display
         }
 
         function beep() {
@@ -207,17 +205,11 @@
             audio.play();
         }
 
-        function longBeep() {
-            let audio = new Audio('https://actions.google.com/sounds/v1/alarms/beep_long.ogg');
-            audio.play();
-        }
-
         function customBeep() {
             let audio1 = new Audio('https://actions.google.com/sounds/v1/alarms/beep_short.ogg');
             let audio2 = new Audio('https://actions.google.com/sounds/v1/alarms/beep_short.ogg');
-
             audio1.play();
-            setTimeout(() => audio2.play(), 500); // Play second beep after 500ms
+            setTimeout(() => audio2.play(), 300); // Shortened interval to 300ms
         }
     </script>
 </body>
