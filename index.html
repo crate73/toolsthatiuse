@@ -9,8 +9,8 @@
         body {
             font-family: Arial, sans-serif;
             text-align: center;
-            background-color: #121212; /* Dark background */
-            color: #FFFFFF; /* Light text */
+            background-color: #121212;
+            color: #FFFFFF;
             margin: 0;
             padding: 0;
             display: flex;
@@ -23,15 +23,15 @@
         .timer-container {
             max-width: 400px;
             padding: 20px;
-            background: #1E1E1E; /* Slightly lighter dark background */
+            background: #1E1E1E;
             border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5); /* Subtle shadow */
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
         }
 
         h1 {
             font-size: 2rem;
             margin-bottom: 20px;
-            color: #BB86FC; /* Accent color */
+            color: #BB86FC;
         }
 
         .time {
@@ -68,10 +68,6 @@
             text-align: center;
         }
 
-        .input-group input[type="number"]:focus {
-            outline: 2px solid #BB86FC; /* Highlight on focus */
-        }
-
         .buttons {
             display: flex;
             justify-content: center;
@@ -81,17 +77,16 @@
         button {
             font-size: 1rem;
             padding: 10px 15px;
-            background-color: #03DAC6; /* Accent button color */
-            color: #000000; /* Dark text on button */
+            background-color: #03DAC6;
+            color: #000000;
             border: none;
             border-radius: 5px;
             cursor: pointer;
-            transition: background 0.3s ease, transform 0.2s;
         }
 
         button:hover {
-            background-color: #018786; /* Darker accent */
-            transform: scale(1.05); /* Slight hover effect */
+            background-color: #018786;
+            transform: scale(1.05);
         }
     </style>
 </head>
@@ -113,7 +108,7 @@
                 <input type="number" id="pause" value="0" min="0">
             </div>
             <div class="input-group">
-                <label for="custom-alarm">Get Ready! (seconds remaining):</label>
+                <label for="get-ready-alarm">Get Ready! (seconds remaining):</label>
                 <input type="number" id="get-ready-alarm" value="15" min="0">
             </div>
             <div class="buttons">
@@ -135,7 +130,7 @@
         }
 
         function startTimer() {
-            stopTimer(); // Clear any existing intervals
+            stopTimer();
             let hours = parseInt(document.getElementById('hours').value) || 0;
             let minutes = parseInt(document.getElementById('minutes').value) || 0;
             let seconds = parseInt(document.getElementById('seconds').value) || 0;
@@ -166,8 +161,7 @@
                         timerElement.textContent = formatTime(h, m, s);
                     } else {
                         clearInterval(interval);
-                        longBeep();
-                        // Add pause before restarting
+                        beep(); // Single beep on timer end
                         pauseTimeout = setTimeout(() => {
                             totalTimeInSeconds = hours * 3600 + minutes * 60 + seconds;
                             customAlarmTriggered = false;
@@ -186,13 +180,13 @@
         }
 
         function clearTimer() {
-            stopTimer(); // Stop any ongoing timer
+            stopTimer();
             document.getElementById('hours').value = 0;
             document.getElementById('minutes').value = 0;
             document.getElementById('seconds').value = 0;
             document.getElementById('pause').value = 0;
-            document.getElementById('custom-alarm').value = 15;
-            timerElement.textContent = "00:00:00"; // Reset display
+            document.getElementById('get-ready-alarm').value = 15;
+            timerElement.textContent = "00:00:00";
         }
 
         function beep() {
@@ -200,17 +194,11 @@
             audio.play();
         }
 
-        function longBeep() {
-            let audio = new Audio('https://actions.google.com/sounds/v1/alarms/beep_long.ogg');
-            audio.play();
-        }
-
         function customBeep() {
             let audio1 = new Audio('https://actions.google.com/sounds/v1/alarms/beep_short.ogg');
             let audio2 = new Audio('https://actions.google.com/sounds/v1/alarms/beep_short.ogg');
-
             audio1.play();
-            setTimeout(() => audio2.play(), 500); // Play second beep after 500ms
+            setTimeout(() => audio2.play(), 500);
         }
     </script>
 </body>
