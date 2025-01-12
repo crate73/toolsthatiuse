@@ -166,7 +166,7 @@
                         timerElement.textContent = formatTime(h, m, s);
                     } else {
                         clearInterval(interval);
-                        beep();
+                        longBeep();
                         // Add pause before restarting
                         pauseTimeout = setTimeout(() => {
                             totalTimeInSeconds = hours * 3600 + minutes * 60 + seconds;
@@ -200,9 +200,17 @@
             audio.play();
         }
 
-        function customBeep() {
-            let audio = new Audio('https://actions.google.com/sounds/v1/alarms/digital_watch_alarm_long.ogg');
+        function longBeep() {
+            let audio = new Audio('https://actions.google.com/sounds/v1/alarms/beep_long.ogg');
             audio.play();
+        }
+
+        function customBeep() {
+            let audio1 = new Audio('https://actions.google.com/sounds/v1/alarms/beep_short.ogg');
+            let audio2 = new Audio('https://actions.google.com/sounds/v1/alarms/beep_short.ogg');
+
+            audio1.play();
+            setTimeout(() => audio2.play(), 500); // Play second beep after 500ms
         }
     </script>
 </body>
